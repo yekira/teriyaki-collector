@@ -25,4 +25,5 @@ for filename in os.listdir(zips_dir):
         # Extract the contents of the zip file to the directory
         zip_path = os.path.join(zips_dir, filename)
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            print("Extracting %s" % zip_path)
             zip_ref.extractall(flat_path)
