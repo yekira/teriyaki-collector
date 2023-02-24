@@ -1,5 +1,4 @@
 import os
-import chardet
 import subprocess
 import json
 
@@ -14,19 +13,27 @@ def read_tja_files(path):
             with open(full_path, 'rb') as f:
                 # do something with the file
                 data = f.read()
-                encoding = chardet.detect(data)["encoding"]
+                encoding = os.environ["ENC"]
                 print("Reading %s as %s" % (full_path, encoding))
                 new_data = data.decode(encoding)
 
                 song_file = None
 
                 for line in new_data.splitlines():
-                    print(list(line))
+                    #print(list(line))
 
                     if line.startswith("WAVE"):
                         tja_parent = os.path.dirname(full_path)
                         #strip() is bad?
-                        song_file = os.path.join(tja_parent, line.split(':')[1].strip())
+                        sfn = line.split(':')[1].strip()
+
+                        # HARD CODING
+                        if sfn == "哀 want U(等速).ogg":
+                            sfn = "哀 want U.ogg"
+                        elif sfn == "太鼓の達人2020 本家終焉の最恐メドレー100(+2).ogg":
+                            sfn = "太鼓の達人2020 本家終焉の最恐メドレー100.ogg"
+
+                        song_file = os.path.join(tja_parent, sfn)
                         if not os.path.isfile(song_file):
                             raise FileNotFoundError("The song file of %s does not exist." % full_path)
                         path_array = [full_path, song_file]
@@ -64,6 +71,6 @@ sorted_list = sorted(hash_array_list, key=lambda x: x[0])
 
 print(sorted_list)
 
-with open('output.json', 'w') as f:
+with open(os.environ["OUT"], 'w') as f:
     # Write the list to the file as JSON
     json.dump(sorted_list, f)

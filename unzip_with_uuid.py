@@ -26,4 +26,12 @@ for filename in os.listdir(zips_dir):
         zip_path = os.path.join(zips_dir, filename)
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             print("Extracting %s" % zip_path)
-            zip_ref.extractall(flat_path)
+            #zip_ref.extractall(flat_path)
+
+            for info in zip_ref.infolist():
+                encoder = 'utf-8' if info.flag_bits & 0x800 else 'cp437'
+                if encoder == 'cp437':
+                    raw = info.filename.encode(encoder)
+                    info.filename = raw.decode("cp932")
+                    print(info.filename)
+                zip_ref.extract(info,flat_path)
