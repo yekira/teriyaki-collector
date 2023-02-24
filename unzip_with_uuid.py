@@ -32,6 +32,6 @@ for filename in os.listdir(zips_dir):
                 encoder = 'utf-8' if info.flag_bits & 0x800 else 'cp437'
                 if encoder == 'cp437':
                     raw = info.filename.encode(encoder)
-                    info.filename = raw.decode("cp932")
+                    info.filename = raw.decode(os.environ["ENC"])
                     print(info.filename)
                 zip_ref.extract(info,flat_path)
