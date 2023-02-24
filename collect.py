@@ -48,7 +48,7 @@ for tja_file, song_file in path_array_list:
     awww = []
 
     for some_file in [tja_file, song_file]:
-        result = subprocess.run(['ipfs', 'add', some_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(['ipfs', 'add', '--pin', some_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         # Print the stdout output
         stdout_result = result.stdout.decode('utf-8')
