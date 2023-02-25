@@ -2,6 +2,11 @@ import os
 import subprocess
 import json
 
+def nkf(data):
+    result1 = subprocess.run(['cat'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, input=data.encode('utf-8'))
+    result2 = subprocess.run(['nkf', "-w"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, input=result1.stdout)
+    return result2.stdout.decode('utf-8')
+
 path_array_list = []
 
 def read_tja_files(path):
@@ -10,16 +15,14 @@ def read_tja_files(path):
         if os.path.isdir(full_path):
             read_tja_files(full_path)
         elif filename.endswith('.tja'):
-            with open(full_path, 'rb') as f:
+            with open(full_path, 'r') as f:
                 # do something with the file
-                data = f.read()
-                encoding = os.environ["ENC"]
-                print("Reading %s as %s" % (full_path, encoding))
-                new_data = data.decode(encoding)
+                print("Reading %s" % full_path)
+                data = nkf(f.read())
 
                 song_file = None
 
-                for line in new_data.splitlines():
+                for line in data.splitlines():
                     #print(list(line))
 
                     if line.startswith("WAVE"):
@@ -35,6 +38,7 @@ def read_tja_files(path):
 
                         song_file = os.path.join(tja_parent, sfn)
                         if not os.path.isfile(song_file):
+                            print(list(song_file))
                             raise FileNotFoundError("The song file of %s does not exist." % full_path)
                         path_array = [full_path, song_file]
                         #print(path_array)

@@ -11,5 +11,5 @@ OUT=output.json python collect.py
 ```bash
 python src2_get.py
 ENC=cp932 python unzip_with_uuid.py
-ENC=cp932 OUT=output2.json python collect.py
+OUT=output2.json python collect.py
 ```

@@ -28,10 +28,21 @@ for filename in os.listdir(zips_dir):
             print("Extracting %s" % zip_path)
             #zip_ref.extractall(flat_path)
 
+            if not os.environ.get("ENC"):
+                zip_ref.extractall(flat_path)
+                continue
+
             for info in zip_ref.infolist():
-                encoder = 'utf-8' if info.flag_bits & 0x800 else 'cp437'
-                if encoder == 'cp437':
-                    raw = info.filename.encode(encoder)
-                    info.filename = raw.decode(os.environ["ENC"])
-                    print(info.filename)
+                info.filename = info.filename.encode('cp437').decode(os.environ["ENC"])
+                # fn = info.filename
+                # fn_utf8 = nkf(fn)
+                # print(fn,fn_utf8)
+                # if fn != fn_utf8:
+                #     fn_try = fn.encode('cp437').decode('utf-8')
+                #     info.filename = nkf(fn_try)
+                # encoder = 'utf-8' if info.flag_bits & 0x800 else 'cp437'
+                # if encoder == 'cp437':
+                #     raw = info.filename.encode(encoder)
+                #     info.filename = raw.decode(os.environ["ENC"])
+                #     print(info.filename)
                 zip_ref.extract(info,flat_path)
