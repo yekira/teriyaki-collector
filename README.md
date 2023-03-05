@@ -13,3 +13,9 @@ python src2_get.py
 ENC=cp932 python unzip_with_uuid.py
 OUT=output2.json python collect.py
 ```
+
+# from Song TJAP3 ver.1.33
+
+```bash
+OUT=output3.json python collect.py
+```
