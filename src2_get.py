@@ -14,7 +14,7 @@ class_names = [
     "created-list-a"
 ]
 
-GOAL = 421+262
+GOAL = 423+262
 
 while len(set(hrefs)) < GOAL:
     for i, url in enumerate(urls):
