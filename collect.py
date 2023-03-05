@@ -17,20 +17,22 @@ def read_tja_files(path):
         if os.path.isdir(full_path):
             read_tja_files(full_path)
         elif filename.endswith('.tja'):
-            with open(full_path, 'r', encoding=os.environ.get("ENC","utf-8")) as f:
+            with open(full_path, 'rb') as f:
                 # do something with the file
                 print("Reading %s" % full_path)
+                raw_data = f.read()
+                decode_opt = "strict"
 
                 #HARD... need to fix (utf-8?cp932?sjis?)
-                # if filename in ["ネテモネテモ.tja", "タベテモタベテモ.tja", "Phantom Rider.tja"]:
-                #     print("SKIPPING because tja is broken")
-                #     continue
+                if int(os.environ.get("FIXP3",0)) == 1 and filename in ["ネテモネテモ.tja", "タベテモタベテモ.tja", "Phantom Rider.tja"]:
+                    decode_opt = "backslashreplace"
 
                 #data = nkf.nkf('-w', f.read()).decode('utf-8')
+                data = raw_data.decode(os.environ.get("ENC","utf-8"), decode_opt)
 
                 song_file = None
 
-                for line in f.readlines():
+                for line in data.splitlines():
                     #print(list(line))
 
                     if line.startswith("WAVE"):
