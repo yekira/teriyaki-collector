@@ -22,9 +22,9 @@ def read_tja_files(path):
                 print("Reading %s" % full_path)
 
                 #HARD... need to fix (utf-8?cp932?sjis?)
-                if filename in ["ネテモネテモ.tja", "タベテモタベテモ.tja", "Phantom Rider.tja"]:
-                    print("SKIPPING because tja is broken")
-                    continue
+                # if filename in ["ネテモネテモ.tja", "タベテモタベテモ.tja", "Phantom Rider.tja"]:
+                #     print("SKIPPING because tja is broken")
+                #     continue
 
                 #data = nkf.nkf('-w', f.read()).decode('utf-8')
 
