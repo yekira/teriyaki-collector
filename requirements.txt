@@ -1,4 +1,4 @@
 requests==2.28.2
 beautifulsoup4==4.11.2
 #https://github.com/nurse/nkf/tree/master/NKF.python3
-nkf==1.0
+#nkf==1.0

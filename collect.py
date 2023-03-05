@@ -1,11 +1,13 @@
 import os
 import subprocess
 import json
+#import nkf
 
-def nkf(data):
-    result1 = subprocess.run(['cat'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, input=data.encode('utf-8'))
-    result2 = subprocess.run(['nkf', "-w"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, input=result1.stdout)
-    return result2.stdout.decode('utf-8')
+# def _nkf(data):
+#     return nkf.nkf('-w', data).decode('utf-8')
+    # result1 = subprocess.run(['cat'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, input=data.encode('utf-8'))
+    # result2 = nkf.nkf('-w', result1.stdout)
+    # return result2.decode('utf-8')
 
 path_array_list = []
 
@@ -15,14 +17,20 @@ def read_tja_files(path):
         if os.path.isdir(full_path):
             read_tja_files(full_path)
         elif filename.endswith('.tja'):
-            with open(full_path, 'r') as f:
+            with open(full_path, 'r', encoding=os.environ.get("ENC","utf-8")) as f:
                 # do something with the file
                 print("Reading %s" % full_path)
-                data = nkf(f.read())
+
+                #HARD... need to fix (utf-8?cp932?sjis?)
+                if filename in ["ネテモネテモ.tja", "タベテモタベテモ.tja", "Phantom Rider.tja"]:
+                    print("SKIPPING because tja is broken")
+                    continue
+
+                #data = nkf.nkf('-w', f.read()).decode('utf-8')
 
                 song_file = None
 
-                for line in data.splitlines():
+                for line in f.readlines():
                     #print(list(line))
 
                     if line.startswith("WAVE"):
@@ -35,10 +43,28 @@ def read_tja_files(path):
                             sfn = "哀 want U.ogg"
                         elif sfn == "太鼓の達人2020 本家終焉の最恐メドレー100(+2).ogg":
                             sfn = "太鼓の達人2020 本家終焉の最恐メドレー100.ogg"
+                        # テーマ・オブ・半沢直樹 ～Main Title～.ogg
+                        # テーマ・オブ・半沢直樹 ～Main Title～.ogg
+                        elif "アニメ" in full_path and sfn == "チューリングラブ feat.Sou  ナナヲアカリ.ogg":
+                            sfn = "チューリングラブ feat.Sou ナナヲアカリ.ogg"
+                        elif sfn == "Highschool love! .ogg":
+                            sfn = "Highschool love!.ogg"
+                        # elif sfn == "繧ア繝ュ竭ィdestiny.ogg":
+                        #     sfn = "ケロ⑨destiny.ogg"
+                        # elif sfn == "SORA-竇」 繝悶Φ繝代た繝ウ繧ー.ogg":
+                        #     sfn = "SORA-Ⅳ ブンパソング.ogg"
+                        # elif sfn == "螂ウ逾槭↑荳也阜II.ogg":
+                        #     sfn = "女神な世界II.ogg"
+                        # elif sfn == "了7708.ogg":
+                        #     sfn = "λ7708.ogg"
+                        # elif sfn == "SORA-竇。 繧ー繝ェ繝シ繧シ581.ogg":
+                        #     sfn = "SORA-Ⅱ グリーゼ581.ogg"
+                        # elif sfn == "万戈イム−一ノ十.ogg":
+                        #     sfn = "万戈イム－一ノ十.ogg"
 
                         song_file = os.path.join(tja_parent, sfn)
                         if not os.path.isfile(song_file):
-                            print(list(song_file))
+                            print(sfn,list(song_file))
                             raise FileNotFoundError("The song file of %s does not exist." % full_path)
                         path_array = [full_path, song_file]
                         #print(path_array)
